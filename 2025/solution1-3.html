@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>حل نموذجي - الاختبار الأول (السنة الثالثة متوسط)</title>
+  <style>
+    :root{
+      --accent:#0b5dd7;
+      --muted:#666;
+      --bg:#fafafa;
+      --card:#fff;
+      --danger:#c0392b;
+      font-family: "Segoe UI", Tahoma, "Noto Kufi Arabic", "Arial", sans-serif;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);color:#222}
+    .container{max-width:980px;margin:28px auto;padding:20px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between}
+    .school{
+      text-align:right;
+    }
+    .school h1{margin:0;font-size:20px}
+    .school p{margin:2px 0;color:var(--muted)}
+    .notice{
+      background:linear-gradient(90deg, rgba(11,93,215,.06), rgba(11,93,215,.02));
+      border-left:4px solid var(--accent);
+      padding:12px 14px;margin-top:14px;border-radius:6px;
+      color:#0b3f90;font-weight:600;
+    }
+
+    main{margin-top:18px}
+    .card{background:var(--card);border-radius:10px;padding:16px;box-shadow:0 6px 18px rgba(20,20,20,.05)}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .btn{
+      background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:600;
+      box-shadow:0 4px 8px rgba(11,93,215,.12)
+    }
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(11,93,215,.12)}
+    .btn.danger{background:var(--danger);box-shadow:none}
+    .u-small{font-size:13px;color:var(--muted)}
+    .drop{
+      margin-top:14px;border:2px dashed rgba(0,0,0,.06);border-radius:10px;padding:20px;text-align:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+    }
+    .drop.dragover{border-color:var(--accent);box-shadow:0 8px 24px rgba(11,93,215,.06)}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:14px}
+    .thumb{background:#fff;border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;
+      box-shadow:0 6px 14px rgba(20,20,20,.04);overflow:hidden}
+    .thumb img{max-width:100%;height:120px;object-fit:cover;border-radius:6px}
+    .thumb .meta{font-size:12px;color:var(--muted);width:100%;text-align:center}
+    .footer{margin-top:18px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    @media (max-width:560px){
+      header{flex-direction:column;align-items:flex-start;gap:8px}
+      .school{text-align:right}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="school">
+        <h1>حل نموذجي للاختبار الأول — السنة الثالثة متوسط</h1>
+        <p class="u-small">متوسطة الشهيد كز العربي — مرسى بن مهيدي</p>
+      </div>
+
+      <div style="text-align:left;">
+        <strong>الصفحة: </strong><span class="u-small">عرض صفحة واحدة (صور الأسئلة)</span>
+      </div>
+    </header>
+
+    <div class="notice card">
+      ملاحظة مهمة: سيتم نشر الحل النموذجي بعد <strong>3 أيام</strong> من تاريخ عرض الأسئلة. الرجاء متابعة الصفحة للاطلاع على الحل.
+    </div>
+
+    <main>
+      <section class="card">
+        <div class="controls">
+          <label class="btn" for="files">اختيار صور</label>
+          <input id="files" type="file" accept="image/*" multiple style="display:none" />
+          <button id="clearBtn" class="btn ghost">مسح المعاينة</button>
+          <button id="printBtn" class="btn">طباعة الصفحة</button>
+          <span class="u-small" style="margin-inline-start:auto">اسحب الصور هنا أو اضغط "اختيار صور" لإضافتها</span>
+        </div>
+
+        <div id="dropzone" class="drop" aria-label="مقصود بسحب وإفلات الصور">
+          اسحب وأسقط الصور هنا
+          <div class="gallery" id="gallery" style="margin-top:12px;"></div>
+        </div>
+
+        <div class="footer">
+          <div class="u-small">تلميح: يمكنك إعادة ترتيب الصور خارجياً ثم رفعها بالترتيب الذي تحبه.</div>
+          <div class="u-small">الصفحة مُعدة للعرض على اللوحة أو الطباعة.</div>
+        </div>
+      </section>
+    </main>
+
+    <footer style="margin-top:12px;text-align:center;color:var(--muted);font-size:13px">
+      &copy; متوسطة الشهيد كز العربي — مرسى بن مهيدي
+    </footer>
+  </div>
+
+  <script>
+    // عناصر
+    const filesInput = document.getElementById('files');
+    const dropzone = document.getElementById('dropzone');
+    const gallery = document.getElementById('gallery');
+    const clearBtn = document.getElementById('clearBtn');
+    const printBtn = document.getElementById('printBtn');
+
+    // إضافة ملفات من input أو سحب
+    function handleFiles(fileList){
+      const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+      files.forEach(file => {
+        const reader = new FileReader();
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = file.name;
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'حذف';
+        removeBtn.style.marginTop = '6px';
+        removeBtn.style.border = '0';
+        removeBtn.style.background='transparent';
+        removeBtn.style.cursor='pointer';
+        removeBtn.style.color='#c0392b';
+        removeBtn.style.fontSize='13px';
+
+        removeBtn.addEventListener('click', ()=> thumb.remove());
+
+        reader.onload = e => {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          thumb.appendChild(img);
+          thumb.appendChild(meta);
+          thumb.appendChild(removeBtn);
+          gallery.appendChild(thumb);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // input change
+    filesInput.addEventListener('change', e => handleFiles(e.target.files));
+
+    // drag & drop
+    ['dragenter','dragover'].forEach(evt => {
+      dropzone.addEventListener(evt, e => {
+        e.preventDefault(); e.stopPropagation();
+        dropzone.classList.add('dragover');
+      });
+    });
+    ['dragleave','drop'].forEach(evt => {
+      dropzone.addEventListener(evt, e => {
+        e.preventDefault(); e.stopPropagation();
+        dropzone.classList.remove('dragover');
+      });
+    });
+    dropzone.addEventListener('drop', e => {
+      const dt = e.dataTransfer;
+      if(dt && dt.files) handleFiles(dt.files);
+    });
+
+    // مسح المعاينات
+    clearBtn.addEventListener('click', ()=> gallery.innerHTML='');
+
+    // طباعة الصفحة
+    printBtn.addEventListener('click', ()=> window.print());
+
+    // تحسين الوصول: عند النقر على الزر label نفتح input
+    document.querySelector('label[for="files"]').addEventListener('click', ()=> filesInput.click());
+  </script>
+</body>
+</html>
